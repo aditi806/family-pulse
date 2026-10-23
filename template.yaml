@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: FamilyPulse MCP server (Streamable HTTP) on Lambda + API Gateway + DynamoDB, optional Bedrock.
+
+Parameters:
+  McpToken:
+    Type: String
+    NoEcho: true
+    Description: Bearer token required on every MCP request.
+  BedrockModelId:
+    Type: String
+    Default: ""
+    Description: Optional Bedrock model/inference-profile ID for natural phrasing (leave empty to disable).
+  TimeZone:
+    Type: String
+    Default: Asia/Kolkata
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Timeout: 15
+    MemorySize: 256
+
+Resources:
+  StateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions: [{ AttributeName: pk, AttributeType: S }]
+      KeySchema: [{ AttributeName: pk, KeyType: HASH }]
+
+  McpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: src/lambda.handler
+      Environment:
+        Variables:
+          FAMILYPULSE_TABLE: !Ref StateTable
+          FAMILYPULSE_TOKEN: !Ref McpToken
+          FAMILYPULSE_TZ: !Ref TimeZone
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          TZ: !Ref TimeZone
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref StateTable }
+        - Statement:
+            - Effect: Allow
+              Action: [bedrock:InvokeModel]
+              Resource: "*"   # scope down to your model/inference-profile ARN in production
+      Events:
+        Mcp:
+          Type: HttpApi
+          Properties: { Path: /mcp, Method: ANY }
+
+Outputs:
+  McpEndpoint:
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/mcp"

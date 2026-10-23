@@ -1,0 +1,9 @@
+{
+  "_note": "Template. Alexa+ preview onboarding defines the exact registration format; copy these values into it.",
+  "name": "familypulse",
+  "description": "Family chores, medication check-ins and schedule briefings.",
+  "transport": "streamable-http",
+  "url": "https://YOUR-API-ID.execute-api.YOUR-REGION.amazonaws.com/mcp",
+  "protocolVersion": "2025-11-25",
+  "auth": { "type": "bearer", "token_env": "FAMILYPULSE_TOKEN" }
+}

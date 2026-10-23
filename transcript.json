@@ -1,0 +1,75 @@
+[
+  {
+    "type": "handshake",
+    "protocol": "2025-11-25",
+    "server": "familypulse",
+    "tools": [
+      "list_family_members",
+      "assign_chore",
+      "log_chore",
+      "list_chores",
+      "log_medication",
+      "check_medication",
+      "daily_briefing",
+      "suggest_rebalance"
+    ]
+  },
+  {
+    "type": "turn",
+    "say": "Alexa, did Grandpa take his evening medication?",
+    "tool": "check_medication",
+    "args": {
+      "member": "Grandpa"
+    },
+    "reply": "Grandpa has taken 1 of 2 Metformin doses due so far today. The 8 PM dose hasn't been logged.",
+    "isError": false
+  },
+  {
+    "type": "turn",
+    "say": "Alexa, tell FamilyPulse Grandpa just took his pill.",
+    "tool": "log_medication",
+    "args": {
+      "member": "Grandpa",
+      "medication": "Metformin"
+    },
+    "reply": "Logged Metformin for Grandpa at 8:30 PM. That covers everything due so far today.",
+    "isError": false
+  },
+  {
+    "type": "turn",
+    "say": "Alexa, Maya walked the dog.",
+    "tool": "log_chore",
+    "args": {
+      "member": "Maya",
+      "chore": "walked the dog"
+    },
+    "reply": "Nice. I marked Walk the dog as done for Maya. Maya has 2 chores left.",
+    "isError": false
+  },
+  {
+    "type": "turn",
+    "say": "Alexa, give me the family briefing.",
+    "tool": "daily_briefing",
+    "args": {},
+    "reply": "Good evening. It's Friday, October 23. Pending chores: Maya has Clean her room and Water the plants; Leo has Take out the recycling; Mom has Grocery shopping; Dad has Wash the car. Tomorrow: Maya's piano lesson at 4 PM, Leo's dentist appointment at 4:30 PM and Dad's family dinner at 7:30 PM. Heads up: Maya's piano lesson and Leo's dentist appointment both need Mom as driver, and they overlap.",
+    "isError": false
+  },
+  {
+    "type": "turn",
+    "say": "Alexa, is the chore split fair?",
+    "tool": "suggest_rebalance",
+    "args": {},
+    "reply": "Maya carries 6 chore points this week and Leo only 2. Suggest moving \"Clean her room\" from Maya to Leo. Say apply to confirm.",
+    "isError": false
+  },
+  {
+    "type": "turn",
+    "say": "Alexa, yes, apply that.",
+    "tool": "suggest_rebalance",
+    "args": {
+      "apply": true
+    },
+    "reply": "Maya carries 6 chore points this week and Leo only 2. Moved \"Clean her room\" from Maya to Leo. Done.",
+    "isError": false
+  }
+]
